@@ -29,30 +29,16 @@ app.post('/api/books', (req, res, next) => {
  .catch(error => res.status(400).json({error}));
 });
 
+app.get('/api/books/:id', (req, res, next)=>  {
+  Book.findOne({_id: req.params.id})
+    .then(book => res.status(200).json(book))
+    .catch(error => res.status(400).json({error}));
+});
+
 app.get('/api/books', (req, res, next) => {
-  const books = [
-    {
-      userId: '12345',
-      title: 'La grande avanture',
-      author: 'Christophe Ferari',
-      imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-      year: 2012,
-      genre: 'Aventure',
-      ratings : [],
-      averageRating: 0
-    },
-    {
-      userId: '54321',
-      title: 'Le corbeau et le voleur',
-      author: 'Michel Dupain',
-      imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-      year: 2015,
-      genre: 'Fable',
-      ratings : [],
-      averageRating: 0
-    },
-  ];
-  res.status(200).json(books);
+  Book.find()
+    .then(books => res.status(200).json(books))
+    .catch(error => res.status(400).json({error}));
 });
 
 module.exports = app;
