@@ -1,9 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+
+const Book = require ('./models/Book')
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
 const app = express();
 
 app.use(express.json());
@@ -16,10 +20,13 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/books', (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: 'Objet créé !'
-  });
+  delete req.body.id;
+  const book = new Book ({
+  ...req.body
+ });
+ book.save()
+ .then(()=> res.status(201).json({message:'Objet enregistré !'}))
+ .catch(error => res.status(400).json({error}));
 });
 
 app.get('/api/books', (req, res, next) => {
