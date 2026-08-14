@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const bookRoutes = require ('./routes/book')
-const userRoutes = require ('.routes/user');
+const bookRoutes = require ('./routes/book');
+const userRoutes = require ('./routes/user');
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connexion à MongoDB réussie !'))
