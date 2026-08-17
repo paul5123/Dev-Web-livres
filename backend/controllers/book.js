@@ -26,7 +26,7 @@ exports.createRatingsgBook = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
     .then((book) => {
       if (book.ratings.some(rating => rating.userId === req.auth.userId)) {
-        return res.status(403).json({ message: 'Not authorized' });
+        return res.status(403).json({ message: 'unauthorized request' });
       }
       if(bookObject.rating<0 || bookObject.rating>5) {
         return res.status(400).json({ message: 'La note doit être comprise entre 0 et 5' });
@@ -65,7 +65,7 @@ exports.modifyBook = (req, res, next) => {
    Book.findOne({_id: req.params.id})
        .then((book) => {
            if (book.userId != req.auth.userId) {
-               res.status(401).json({ message : 'Not authorized'});
+               res.status(403).json({ message : 'unauthorized request'});
            } else {
                Book.updateOne({ _id: req.params.id}, { ...bookObject, _id: req.params.id})
                .then(() => res.status(200).json({message : 'Livre modifié!'}))
@@ -81,7 +81,7 @@ exports.deleteBook = (req, res, next) => {
    Book.findOne({ _id: req.params.id})
        .then(book => {
            if (book.userId != req.auth.userId) {
-               res.status(401).json({message: 'Not authorized'});
+               res.status(403).json({message: 'unauthorized request'});
            } else {
                const filename = book.imageUrl.split('/images/')[1];
                fs.unlink(`images/${filename}`, () => {
