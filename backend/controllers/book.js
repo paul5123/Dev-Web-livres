@@ -18,6 +18,34 @@ exports.createBook = (req, res, next) => {
    .catch(error => { res.status(400).json( { error })})
 };
 
+exports.createRatingsgBook = (req, res, next) => {
+  const bookObject = req.body;
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if (book.ratings.some(rating => rating.userId === req.auth.userId)) {
+        return res.status(403).json({ message: 'Not authorized' });
+      }
+      if(bookObject.rating<0 || bookObject.rating>5) {
+        return res.status(400).json({ message: 'La note doit être comprise entre 0 et 5' });
+      } 
+      else {
+        const newRating = {
+          userId: req.auth.userId,
+          grade: bookObject.rating
+        };
+
+        book.ratings.push(newRating);
+
+        book.save()
+          .then(() => res.status(200).json(book))
+          .catch(error => res.status(400).json({ error }));
+      }
+    })
+    .catch(error => {
+      res.status(400).json({ error });
+    });
+};
+
 exports.modifyBook = (req, res, next) => {
    const bookObject = req.file ? {
        ...JSON.parse(req.body.book),
