@@ -36,6 +36,12 @@ exports.createRatingsgBook = (req, res, next) => {
 
         book.ratings.push(newRating);
 
+        const totalRating = book.ratings.reduce((total, rating) => {
+        return total + rating.grade;
+        }, 0);
+
+        book.averageRating = totalRating / book.ratings.length;
+
         book.save()
           .then(() => res.status(200).json(book))
           .catch(error => res.status(400).json({ error }));
