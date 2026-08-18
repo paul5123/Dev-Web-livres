@@ -61,7 +61,7 @@ exports.modifyBook = (req, res, next) => {
        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
    } : { ...req.body };
  
-   delete bookObject._userId;
+   delete bookObject.userId;
    Book.findOne({_id: req.params.id})
        .then((book) => {
            if (book.userId != req.auth.userId) {
