@@ -11,7 +11,7 @@ exports.createBook = (req, res, next) => {
        ...bookObject,
        userId: req.auth.userId,
        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-       rattings: [],
+       ratings: [],
        averageRating: 0
 
    });
